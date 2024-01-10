@@ -6,6 +6,8 @@ from pygame.image import load
 from pygame.math import Vector2
 from pygame.mixer import Sound
 
+from datetime import datetime
+
 def load_sprite(name, with_alpha=True):
     path = f"assets/sprites/{name}.png"
     loaded_sprite = load(path)
@@ -131,6 +133,11 @@ def ask(screen, x, y, w, h):
         # display.flip() will update only a portion of the
         # screen to updated, not full area
         pygame.display.flip()
+
+
+def get_current_time():
+    current_date_time = datetime.now()
+    return str(current_date_time)
 
 
 def print_scores(surface, x, y, text, font, color=Color("tomato")):

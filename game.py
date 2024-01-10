@@ -4,7 +4,7 @@ import json
 from operator import itemgetter
 
 from actors import Asteroid, Spaceship
-from utils import get_random_position, load_sprite, print_text, print_scores, ask
+from utils import get_random_position, load_sprite, print_text, print_scores, ask, get_current_time
 
 SCREEN_HEIGHT = 800
 SCREEN_WIDTH = 600
@@ -25,11 +25,13 @@ class GameObject:
         self.high_score = self._load()
         self.high_score_name = "new"
         self.has_won = False
+        self.time_stamp = ""
 
         self.asteroids = []
         self.bullets = []
         self.spaceship = Spaceship((400, 300), self.bullets.append)
 
+    def _spawn_enemies(self):
         for _ in range(3):
             while True:
                 position = get_random_position(self.screen)
@@ -42,6 +44,7 @@ class GameObject:
             self.asteroids.append(Asteroid(position, self.asteroids.append))
 
     def main_loop(self):
+        self._spawn_enemies()
         while True:
             self._handle_input()
             self._process_game_logic()
@@ -101,15 +104,17 @@ class GameObject:
         if self.spaceship:
             for asteroid in self.asteroids:
                 if asteroid.collides_with(self.spaceship):
-                    self.spaceship = None
+                    #self.spaceship = None
                     self.high_score_name = ask(self.screen, 200, 200, 170, 32)
-                    self.high_score.append([self.high_score_name, self.CURRENT_SCORE])
+                    self.time_stamp = get_current_time()
+                    self.high_score.append([self.high_score_name, self.CURRENT_SCORE, self.time_stamp])
                     self._save(sorted(self.high_score, key=itemgetter(1), reverse=True))
 
                     for scores in self._load():
                         self.scores_list.append(scores)
 
                     self.message = "You lost!"
+                    self.main_menu()
                     break
 
         for bullet in self.bullets[:]:
@@ -127,13 +132,18 @@ class GameObject:
                 self.bullets.remove(bullet)
 
         if (not self.asteroids) and self.spaceship:
-            if self.has_won == False:
+            if not self.has_won:
                 self.high_score_name = ask(self.screen, 200, 200, 140, 32)
-                self.high_score.append([self.high_score_name, self.CURRENT_SCORE])
+                self.time_stamp = get_current_time()
+                self.high_score.append([self.high_score_name, self.CURRENT_SCORE, self.time_stamp])
                 self._save(sorted(self.high_score, key=itemgetter(1), reverse=True))
                 self.has_won = True
 
+                for scores in self._load():
+                    self.scores_list.append(scores)
+
             self.message = "You win!"
+            self.main_menu()
 
     def _draw(self):
         self.screen.blit(self.background, (0, 0))
