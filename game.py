@@ -23,13 +23,26 @@ class GameObject:
         self.message = ""
         self.scores_list = []
         self.high_score = self._load()
-        self.high_score_name = "new"
+        self.high_score_name = ""
         self.has_won = False
         self.time_stamp = ""
 
         self.asteroids = []
         self.bullets = []
         self.spaceship = Spaceship((400, 300), self.bullets.append)
+
+    def _reset_game(self):
+        self.message = ""
+        self.scores_list = []
+        self.high_score_name = ""
+        self.has_won = False
+        self.time_stamp = ""
+        self.asteroids = []
+        self.bullets = []
+        self.spaceship = Spaceship((400, 300), self.bullets.append)
+        self.main_menu()
+
+
 
     def _spawn_enemies(self):
         for _ in range(3):
@@ -114,7 +127,7 @@ class GameObject:
                         self.scores_list.append(scores)
 
                     self.message = "You lost!"
-                    self.main_menu()
+                    self._reset_game()
                     break
 
         for bullet in self.bullets[:]:
@@ -143,7 +156,7 @@ class GameObject:
                     self.scores_list.append(scores)
 
             self.message = "You win!"
-            self.main_menu()
+            self._reset_game()
 
     def _draw(self):
         self.screen.blit(self.background, (0, 0))
