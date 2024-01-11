@@ -117,7 +117,7 @@ class GameObject:
         if self.spaceship:
             for asteroid in self.asteroids:
                 if asteroid.collides_with(self.spaceship):
-                    #self.spaceship = None
+                    self.spaceship = None
                     self.high_score_name = ask(self.screen, 200, 200, 170, 32)
                     self.time_stamp = get_current_time()
                     self.high_score.append([self.high_score_name, self.CURRENT_SCORE, self.time_stamp])
@@ -146,6 +146,7 @@ class GameObject:
 
         if (not self.asteroids) and self.spaceship:
             if not self.has_won:
+                self.spaceship = None
                 self.high_score_name = ask(self.screen, 200, 200, 140, 32)
                 self.time_stamp = get_current_time()
                 self.high_score.append([self.high_score_name, self.CURRENT_SCORE, self.time_stamp])

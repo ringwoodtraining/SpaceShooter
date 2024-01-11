@@ -140,7 +140,7 @@ def get_current_time():
     return str(current_date_time)
 
 
-def print_scores(surface, x, y, text, font, color=Color("tomato")):
+def print_scores(surface, x, y, text, font, color=Color(255, 255, 255)):
 
     text_surface = font.render(str(text), False, color)
     rect = text_surface.get_rect()
